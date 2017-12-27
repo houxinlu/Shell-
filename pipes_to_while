@@ -1,0 +1,6 @@
+last_line='NULL'
+your_command | while read line; do
+  last_line="${line}"
+done
+
+echo "${last_line}"
