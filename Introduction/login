@@ -1,0 +1,44 @@
+#!/bin/bash
+# version 1
+#Write a script that upon invocation shows the time and date, lists all logged-in users, and gives the system uptime. The script then saves this information to a logfile.
+
+LOG_DIR=/var/log
+FILE_NAME=login
+ROOT_UID=0	#UID = 0的root用户才拥有权限
+E_XCD=86        #无法切换工作目录的错误码
+E_NOTROOT=87    #非root用户执行错误码
+
+
+#请使用root用户进行运行
+if [ "$UID" -ne "$ROOT_UID" ]
+then
+  echo "Musk be root to run this script."
+  exit $E_NOTROOT
+fi
+
+#默认情况下，输出MST格式的事件
+if [ -n "$1" ]
+then
+  datezone=$1
+fi 
+
+cd $LOG_DIR
+if [ `pwd` != "$LOG_DIR" ]
+then
+  echo "Can't change to $LOG_DIR"
+  exit $E_XCD
+fi
+
+if [ -e $FILE_NAME ]
+then
+  echo "$FILE_NAME is exists,the result has been appended!"
+fi
+date $datazone
+who | awk '{print $1}'
+uptime 
+
+date $datazone >> $FILE_NAME
+who | awk '{print $1}' >> $FILE_NAME
+uptime >> $FILE_NAME
+
+

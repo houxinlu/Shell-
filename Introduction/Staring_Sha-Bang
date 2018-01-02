@@ -1,0 +1,42 @@
+  Shell 仅用于系统管理方面非常的优异！
+
+  Shell脚本，在基础运维工作人员的手上，可以认为是命令的堆砌。但在Shell高手的代码中，你能看到艺术！
+
+Sha-Bang(#!)
+          
+
+  Shell 仅用于系统管理方面非常的优异！
+
+  Shell脚本，在基础运维工作人员的手上，可以认为是命令的堆砌。但在Shell高手的代码中，你能看到艺术！
+
+Sha-Bang(#!)
+
+ (1) 通过 2-3 日志清理脚本的加强版，对规范而完美的有了初步理解：
+
+       1.构思严谨；
+       2.使用变量（大写）；
+       3.使用判断，保证逻辑严谨（ -n[判断参数是否为空]，-ne[判断两个参数是否等于]）；
+       4.$UID 可以直接拿到当前用户的ID值；
+       5.E_XCD = 86 (无法修改文件返回的错误码) E_NOTROOT = 87 (非root用户执行返回的错误码)；
+       6.`pwd` != "$LOG_DIR"            # 与  if["$PWD" != "$LOG_DIR"] 相同，用来确认当前脚本的执行目录地址；
+       7. tail -n $lines messages > mesg.temp           # 更加安全的clean messages文件，并保存近期登陆的用户信息 ；
+          mv mesg.temp messages
+       8. echo " "              #根据Shell编写风格，尽可能能输出所有 提示（错误/最终执行成功）；
+       9. exit 0                # 系统推出
+
+ (2)脚本文件顶部的路径指定，指定到对应解释器的位置
+        格式   #！ +  $Path
+     
+        示例： #!/bin/sh               # 用于大多数商业版本的UNIX
+               #!/bin/bash             # Linux机器上默认，#!/bin/bash -x  :进入脚本调试模式
+               #!/usr/bin/env tcsh     # 这样不用寻找指定bash目录，在env中自动搜索执行
+               #!/usr/bin/perl
+               #!/usr/bin/tcl
+               #!/usr/sed -f
+               #!/usr/awk -f
+     
+ (3)调用脚本
+        chmod 555 scriptname  (给每个人读取/执行权限)
+        chmod +rx scriptname  (给每个人读取/执行权限)
+        chmod u + rx scriptname  (只给脚本所有者读取/执行权限)
+

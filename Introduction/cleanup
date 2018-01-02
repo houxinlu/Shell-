@@ -1,0 +1,36 @@
+#!/bin/bash
+
+LOG_DIR=/var/log  
+ROOT_UID=0		#仅当 $UID 为 0 时，表示为root用户
+LINES=50              #默认存储文件的行数值50
+E_XCD=86              #文件不能更改的错误返回码
+E_NOTROOT=87          #用户非root用户错误返回码
+
+#请用root用户运行
+if [ "$UID" -ne "$ROOT_UID" ]
+then
+  echo "Must be root to run this script."
+  exit $E_NOTROOT
+fi
+
+if [ -n "$1" ]
+then
+  lines=$1		#指定命令行参数，若为空 怎使用默认参数 
+else
+  lines=$LINES
+fi
+
+cd $LOG_DIR
+if [ `pwd` != "$LOG_DIR" ]		#在清理日志前，确认当前执行动作正确进入了指定目录，若未进入则报错！ 
+then 
+  echo "Can't change to $LOG_DIR."
+  exit $E_XCD		#指定推出时的错误码
+fi
+
+tail -n $lines messages > mesg.temp		#使用此种方式更加安全，并保存指定行数的新message文件
+mv mesg.temp messages
+
+cat /dev/null > wtmp		#清除wtmp文件中的内容
+echo "Log files cleaned up."
+
+exit 0
