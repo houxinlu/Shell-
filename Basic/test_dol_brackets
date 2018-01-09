@@ -1,0 +1,54 @@
+#shell中 $(()) 与 $() 还有 ${}的区别
+
+$()与``（反引号）
+在bash shell中，$()与``(反引号)都是用来做命令替换（command）的。
+
+例如：
+[code]$ echo the last sunday is $(date -d "last sunday" +%Y-%m-%d)[/code]
+
+用$()的理由：
+  ``使用起来需要注意点较多，比如容易和‘’搞混，还有在多重命令替换（command）中
+  需要使用转义符\ 
+
+例如：
+如果想 先执行command3 再执行command2 最后执行command1
+[code]command1`command2`command3``[/code]    这样写就会出问题
+[code]command1`command2\`command3\``[/code]  正确写法
+
+[code]command1$(command2$(command3))[/code]  易阅读的写法
+
+$()的不足：
+  ``基本上可用在全部unix shell中，移植性高。而$()并不见得每种shell都能用。
+
+${}用来作变量替换
+一般情况 $var 与 ${var} 没啥不一样
+但是${}会更加精确
+$ var=B
+$ echo $varB
+#原本想打出 BB，可是结果会打出变量 varB的值
+要是使用${}就没问题了
+echo ${A}B
+BB
+
+为了完整起见，我这里再用一些例子加以说明 ${ } 的一些特异功能(匹配正则或类似sed的功能)：
+假设我们定义了一个变量为：
+file=/dir1/dir2/dir3/my.file.txt
+我们可以用 ${ } 分别替换获得不同的值：
+${file#*/}：拿掉第一条 / 及其左边的字符串：dir1/dir2/dir3/my.file.txt
+${file##*/}：拿掉最后一条 / 及其左边的字符串：my.file.txt
+${file#*.}：拿掉第一个 .  及其左边的字符串：file.txt
+${file##*.}：拿掉最后一个 .  及其左边的字符串：txt
+${file%/*}：拿掉最后条 / 及其右边的字符串：/dir1/dir2/dir3
+${file%%/*}：拿掉第一条 / 及其右边的字符串：(空值)
+${file%.*}：拿掉最后一个 .  及其右边的字符串：/dir1/dir2/dir3/my.file
+${file%%.*}：拿掉第一个 .  及其右边的字符串：/dir1/dir2/dir3/my
+记忆的方法为：
+[list]# 是去掉左边(在鉴盘上 # 在 $ 之左边)
+% 是去掉右边(在鉴盘上 % 在 $ 之右边)
+单一符号是最小匹配﹔两个符号是最大匹配。[/list]
+${file:0:5}：提取最左边的 5 个字节：/dir1
+${file:5:5}：提取第 5 个字节右边的连续 5 个字节：/dir2
+我们也可以对变量值里的字符串作替换：
+${file/dir/path}：将第一个 dir 提换为 path：/path1/dir2/dir3/my.file.txt
+${file//dir/path}：将全部 dir 提换为 path：/path1/path2/path3/my.file.txt
+

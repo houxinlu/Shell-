@@ -1,0 +1,92 @@
+
+Special Characters
+  
+     特殊字符在Shell中非常的多，其实特殊字符在任何语言中都非常的多。
+     按照以往的学习方式，首先我浏览完了Shell的Special Characters，其
+     大部分的字符都是了解的，但是有些许字符在掌握上不是很熟练。
+    
+     我先总结了一下常见的特殊字符：
+         # ： 用于注释，非常常见，但非常有用
+         \ :  用于转义
+        `` :  用于执行命令
+         = :  变量赋值
+         . :  当前
+        “” ： 引用（弱）
+        ‘’ ： 引用（强）  强引用中 $指代的变量会被强制转换成 字符串！
+         $ ： 变量替换
+         * ： 通配符
+         ？： 正则中也可表示通配符；在三元运算符中表示一个元素
+         三元表达式：
+               例子：((var=0 var1 < 98?9:21))
+                   #
+                   # if [ "$var1" -lt 98 ]
+                   # then
+                   #   var0=9 
+                   # else 
+                   #   var0=21
+                   # fi
+        () ：括号内的命令列表相当启动一个子shell，例如 在一个shell中，(a=123;)相当与局部变量对其余部分不可见。
+             数组初始化： Array = (element1 element2 element3)
+        {} ：扩展，相当于内容的扩展
+        [] ：test 或 数组元素 list[1] = solt_1 ;echo ${ Array[1] }
+
+        !关于shell中 $(()) 与 $() 还有 ${}的区别      详见test_$brackets
+        !关于shell中()和(()),[]和[[]]的区别           详见test_brackets
+
+      算术运算符（与C语言差不多）
+         <变量>++  : 自增1
+         <变量>--  : 自减1
+              -    :   减
+              +    :   加
+             **    :   指数
+              *    :   单纯乘法
+              /    :   单纯除法
+              %    :   取余
+             +=    :   数加一
+             -=    :   数减一
+      
+      计算命令
+           echo $[1+2]
+           echo `expr 1+2`
+           let A=1+2 echo $A
+
+      逻辑运算符： 
+            -o : or           
+            -a : and
+             ! : 非
+            && : and
+            || : or
+         逻辑运算上，这两个的意义差别不是很明显，但是在用法上确是有一定差距的：
+          例子： #[[ 1<2 && b>a ]] && echo true || echo false
+                 true
+                 #[[ 1<2 -a b>a ]] && echo true || echo false
+                 bash: syntax error in conditional expression
+                 bash: syntax error near `-a’
+                 
+                 #[ 1<2 -a b>a ] && echo true || echo false
+                 true
+                 #[ 1<2 && b>a ] && echo true || echo false
+                 #wrong syntax bash: [: missing `]‘
+                 false  
+    
+            ...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
